@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ToySharingAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +11,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
 var app = builder.Build();
-
+app.UseCors("AllowReactApp"); // Áp dụng CORS
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
